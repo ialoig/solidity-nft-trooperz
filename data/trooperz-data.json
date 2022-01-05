@@ -1,0 +1,48 @@
+[
+    {
+        "index": 0,
+        "traits": [
+            {
+                "category": 0,
+                "name": "base",
+                "season": 0,
+                "svg": "<svg></svg>"
+            },
+            {
+                "category": 0,
+                "name": "yankees",
+                "season": 0,
+                "svg": "<svg></svg>"
+            },
+            {
+                "category": 0,
+                "name": "military",
+                "season": 0,
+                "svg": "<svg></svg>"
+            }
+        ]
+    },
+    {
+        "index": 1,
+        "traits": [
+            {
+                "category": 1,
+                "name": "base",
+                "season": 0,
+                "svg": "<svg></svg>"
+            },
+            {
+                "category": 1,
+                "name": "sunglasses",
+                "season": 0,
+                "svg": "<svg></svg>"
+            },
+            {
+                "category": 1,
+                "name": "3d",
+                "season": 0,
+                "svg": "<svg></svg>"
+            }
+        ]
+    }
+]
