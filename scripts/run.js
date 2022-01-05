@@ -34,7 +34,7 @@ async function main() {
   for (const { index, traits } of trooperzData) {
     console.log("traits length:", traits.length);
     for (let i = 0; i < traits.length; i++) {
-      const trait = await trooperzTraitFactory.createTrait(
+      await trooperzTraitFactory.createTrait(
         traits[i].category,
         traits[i].name,
         traits[i].season,

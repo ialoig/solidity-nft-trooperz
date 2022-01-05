@@ -27,7 +27,7 @@ contract TrooperzTraitFactory is TrooperzBase {
         string memory _name,
         Season _season,
         string memory _svg
-    ) public onlyOwner returns (Trait memory) {
+    ) public onlyOwner returns (uint256) {
         // require(_category.length > 0);
         require(bytes(_name).length > 0);
         // require(_season.length > 0);
@@ -49,7 +49,7 @@ contract TrooperzTraitFactory is TrooperzBase {
         //increament trait ids
         _traitIds.increment();
 
-        return t;
+        return newTraitId;
     }
 
     /**
