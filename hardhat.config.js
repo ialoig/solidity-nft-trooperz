@@ -1,4 +1,10 @@
-require("dotenv").config({ path: "/config/process.env" });
+const dotenv = require("dotenv");
+// should be replaced with the .env file related to the enviroment where contract will be deployed
+const result = dotenv.config({ path: "./config/.env.development" });
+
+if (result.error) {
+  throw result.error;
+}
 
 require("@nomiclabs/hardhat-etherscan");
 require("@nomiclabs/hardhat-waffle");
@@ -24,15 +30,10 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 module.exports = {
   solidity: "0.8.0",
   networks: {
-    ropsten: {
-      url: process.env.ROPSTEN_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    rinkeby: {
+      url: process.env.STAGING_ALCHEMY_KEY,
+      accounts: [process.env.PRIVATE_KEY],
     },
-    // rinkeby: {
-    //   url: process.env.STAGING_ALCHEMY_KEY,
-    //   accounts: [process.env.PRIVATE_KEY],
-    // },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

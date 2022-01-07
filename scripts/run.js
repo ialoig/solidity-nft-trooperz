@@ -31,8 +31,9 @@ async function main() {
   console.log("------> END: Deploying contracts...");
 
   console.log("\n\n------> START: Adding traits ....");
-  for (const { index, traits } of trooperzData) {
-    console.log("traits length:", traits.length);
+  console.log("n.%d traits to be loaded", trooperzData.length);
+  for (const { indexTrait, traits } of trooperzData) {
+    console.log("loading trait [%s]", indexTrait);
     for (let i = 0; i < traits.length; i++) {
       await trooperzTraitFactory.createTrait(
         traits[i].category,
@@ -40,25 +41,28 @@ async function main() {
         traits[i].season,
         traits[i].svg
       );
-      // console.log("Trait created: %s", trait) ;
-      console.log(
-        "trooperz trait added [%s]:",
-        i,
-        "{",
-        traits[i].category,
-        traits[i].name,
-        traits[i].season,
-        traits[i].svg,
-        "}"
-      );
+      // console.log(
+      //   "trooperz trait added [%s]:",
+      //   i,
+      //   "{",
+      //   traits[i].category,
+      //   traits[i].name,
+      //   traits[i].season,
+      //   traits[i].svg,
+      //   "}"
+      // );
     }
   }
   console.log("------> END: Adding traits ....");
 
-  let trait = await trooperzTraitFactory.getTrait(0, 1);
-  console.log("getTrait category 0: ", trait);
-  trait = await trooperzTraitFactory.getTrait(1, 1);
-  console.log("getTrait category 1: ", trait);
+  // const trait = await trooperzTraitFactory.getTrait(0, 1);
+  // console.log("getTrait category 0: ", trait);
+  // trait = await trooperzTraitFactory.getTrait(1, 1);
+  // console.log("getTrait category 1: ", trait);
+
+  console.log("\n\n------> START: Generating Trooperz ....");
+  const svg = await trooperzFactory.generateSVG();
+  console.log("generated svg: ", svg);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

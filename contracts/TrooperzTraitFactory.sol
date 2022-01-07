@@ -38,10 +38,15 @@ contract TrooperzTraitFactory is TrooperzBase {
 
         // creating new Trait
         Trait memory t = Trait(newTraitId, _category, _name, _season, _svg);
+        console.log("[TrooperzTraitFactory] created trait id: %s", t.id);
 
         // insert new trait into array of traits
         // index value is based on trait's category
         traits[uint8(_category)].push(t);
+        console.log(
+            "[TrooperzTraitFactory] traits size:",
+            traits[uint8(_category)].length
+        );
 
         // send the new Trait event
         emit NewTrait(newTraitId, _category, _name, _season, _svg);

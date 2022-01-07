@@ -7,7 +7,7 @@
 
 
 
-## 🚀 Getting started
+# 🚀 Getting started
 
 1.  **Setup local tooling**
     ```shell
@@ -36,13 +36,14 @@ Go ahead and install these other dependencies just in case it didn't do it autom
     $ npx hardhat run scripts/run.js
     ```
 
-3.  **To deploy the contract on Ethereum Rinkeby network**
+3.  **To deploy the contract on Ethereum [Rinkeby network](https://hardhat.org/tutorial/deploying-to-a-live-network.html#_7-deploying-to-a-live-network)**
+
 
     ```shell
     $ npx hardhat run scripts/deploy.js --network rinkeby
     ```
 
-## 💎 Advanced Sample Hardhat Project
+# 📚 Advanced Sample Hardhat Project 👷‍
 
 This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
 
@@ -69,23 +70,24 @@ npx solhint 'contracts/**/*.sol'
 npx solhint 'contracts/**/*.sol' --fix
 ```
 
-## ✅ Etherscan verification
+# ✅ Etherscan verification
 
 To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
 
 In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
 
 ```shell
-hardhat run --network ropsten scripts/deploy.js
+hardhat run --network rinkeby scripts/deploy.js
 ```
 
 Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
 
 ```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
+npx hardhat verify --network rinkeby DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
 ```
 
 
+# 🔭 Learning Solidity
 ## Function Visibility Specifiers
 
 ```shell
