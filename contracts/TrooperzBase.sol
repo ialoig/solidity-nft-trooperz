@@ -24,7 +24,7 @@ contract TrooperzBase is ERC721URIStorage, Ownable, TrooperzTypes {
     // mapping all traits
     // [0] hat
     // [1] eyes
-    mapping(uint256 => Trait[]) traits;
+    mapping(uint256 => Trait[]) public traits;
 
     constructor() ERC721("Trooperz", "TRPZ") {
         console.log("constructor: Trooperz Token");

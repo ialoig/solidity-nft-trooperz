@@ -61,7 +61,7 @@ contract TrooperzTraitFactory is TrooperzBase {
      *  @notice Return a Trait from a given Trait ID
      */
     function getTrait(uint8 _category, uint256 _traitId)
-        external
+        internal
         view
         returns (Trait memory)
     {

@@ -54,16 +54,16 @@ contract TrooperzFactory is TrooperzBase {
         returns (Trait memory)
     {
         console.log("[TrooperzFactory] _category: %s", uint8(_category));
+
+        //getting a random trait for the category passed as a param
+        Trait[] memory traitForCategory = traits[uint8(_category)];
         console.log(
             "[TrooperzFactory] traits length: %s",
-            traits[uint8(_category)].length
+            traitForCategory.length
         );
-        //getting a random trait for the category passed as a param
-        uint256 random = generateRandom(
-            _input,
-            traits[uint8(_category)].length
-        );
-        Trait memory t = traits[uint8(_category)][random];
+        uint256 random = generateRandom(_input, traitForCategory.length);
+
+        Trait memory t = traitForCategory[random];
         console.log("[TrooperzFactory] picked trait: %s", t.id);
         return t;
     }
