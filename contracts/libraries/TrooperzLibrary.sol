@@ -2,23 +2,14 @@
 
 pragma solidity ^0.8.0;
 
-import "./TrooperzBase.sol";
+import "hardhat/console.sol";
 
-contract TrooperzFactory is TrooperzBase {
-    using Counters for Counters.Counter;
-
-    // define id of the Trooperz
-    Counters.Counter internal _trooperzIds;
-
-    function mintTrooperz() public view returns (uint256) {
-        // get the current trait ID
-        uint256 newTrooperzId = _trooperzIds.current();
-        require(newTrooperzId < maxSupply);
-
-        return newTrooperzId;
-    }
-
-    function generateSVG() public view returns (string memory) {
+library TrooperzLibrary {
+    function generateSVG(string memory traitsSVG)
+        internal
+        pure
+        returns (string memory)
+    {
         // TODO:
         // iterate for all the values of Category and for each Category get a random Trait calling pickTraitFromCategory().
         // Get svg string from given Trait and add it to the global svg String.
@@ -38,42 +29,19 @@ contract TrooperzFactory is TrooperzBase {
         );
         string memory endSVG = string(abi.encodePacked("</svg>"));
 
-        // getting traits
-        Trait memory headTrait = pickTraitFromCategory(Category.HAT, "aa");
-
         // generating final SVG
         string memory globalSVG = string(
-            abi.encodePacked(startSVG, baseSVG, headTrait.svg, endSVG)
+            abi.encodePacked(startSVG, baseSVG, traitsSVG, endSVG)
         );
         return globalSVG;
     }
 
-    function pickTraitFromCategory(Category _category, string memory _input)
-        internal
-        view
-        returns (Trait memory)
-    {
-        console.log("[TrooperzFactory] _category: %s", uint8(_category));
-
-        //getting a random trait for the category passed as a param
-        Trait[] memory traitForCategory = traits[uint8(_category)];
-        console.log(
-            "[TrooperzFactory] traits length: %s",
-            traitForCategory.length
-        );
-        uint256 random = generateRandom(_input, traitForCategory.length);
-
-        Trait memory t = traitForCategory[random];
-        console.log("[TrooperzFactory] picked trait: %s", t.id);
-        return t;
-    }
-
     /**
      *  @notice Generate a random number between 1 and max
-     *  @param _input: could be whatever you want
+     *  @param _trooperzId: id of the NFT to be generated
      *  @param _max: Maximun value of the random number
      */
-    function generateRandom(string memory _input, uint256 _max)
+    function generateRandom(uint256 _trooperzId, uint256 _max)
         internal
         view
         returns (uint256)
@@ -85,14 +53,14 @@ contract TrooperzFactory is TrooperzBase {
                     block.number,
                     tx.origin,
                     tx.gasprice,
-                    _input,
-                    _trooperzIds.current(),
+                    _trooperzId,
                     block.timestamp
                 )
             )
         );
-        random = (random % (_max + 1)) + 1;
-        console.log("[TrooperzFactory] random: %s", random);
+        console.log("[TrooperzFactory] random before: %s", random);
+        random = random % _max;
+        console.log("[TrooperzFactory] random after: %s", random);
         return random;
     }
 }

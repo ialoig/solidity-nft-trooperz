@@ -3,31 +3,25 @@ const trooperzData = require("../data/trooperz-data.json");
 
 async function main() {
   // We get the contract to deploy
-  let trooperzBase = await hre.ethers.getContractFactory("TrooperzBase");
-  const trooperzFactory = await hre.ethers.getContractFactory(
-    "TrooperzFactory"
-  );
-  const trooperzTraitFactory = await hre.ethers.getContractFactory(
-    "TrooperzTraitFactory"
-  );
-  const trooperzTypes = await hre.ethers.getContractFactory("TrooperzTypes");
+  let trooperzLibrary = await hre.ethers.getContractFactory("TrooperzLibrary");
+  trooperzLibrary = await trooperzLibrary.deploy();
+  await trooperzLibrary.deployed();
+  let trooperzTypes = await hre.ethers.getContractFactory("TrooperzTypes");
 
   console.log("\n\n------> START: Deploying contracts...");
+  // let trooperzBase = await hre.ethers.getContractFactory("TrooperzBase", {
+  //   libraries: {
+  //     TrooperzLibrary: trooperzLibrary.address,
+  //   },
+  // });
+  let trooperzBase = await hre.ethers.getContractFactory("TrooperzBase");
   trooperzBase = await trooperzBase.deploy();
-  // trooperzFactory = await trooperzFactory.deploy();
-  // trooperzTraitFactory = await trooperzTraitFactory.deploy();
-  // trooperzTypes = await trooperzTypes.deploy();
+  trooperzTypes = await trooperzTypes.deploy();
 
   await trooperzBase.deployed();
-  await trooperzFactory.deployed();
-  await trooperzTraitFactory.deployed();
   await trooperzTypes.deployed();
   console.log("TrooperzBase deployed to:", trooperzBase.address);
-  console.log("TrooperzFactory deployed to:", trooperzFactory.address);
-  console.log(
-    "TrooperzTraitFactory deployed to:",
-    trooperzTraitFactory.address
-  );
+  console.log("TrooperzFactory deployed to:", trooperzLibrary.address);
   console.log("TrooperzTypes deployed to:", trooperzTypes.address);
 
   console.log("------> END: Deploying contracts...");
@@ -37,7 +31,7 @@ async function main() {
   for (const { indexTrait, traits } of trooperzData) {
     console.log("loading trait [%s]", indexTrait);
     for (let i = 0; i < traits.length; i++) {
-      await trooperzTraitFactory.createTrait(
+      await trooperzBase.createTrait(
         traits[i].category,
         traits[i].name,
         traits[i].season,
@@ -63,7 +57,7 @@ async function main() {
   // console.log("getTrait category 1: ", trait);
 
   console.log("\n\n------> START: Generating Trooperz ....");
-  const svg = await trooperzFactory.generateSVG();
+  const svg = await trooperzBase.mintTrooperz();
   console.log("generated svg: ", svg);
 }
 
