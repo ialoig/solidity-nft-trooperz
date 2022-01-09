@@ -36,7 +36,7 @@ contract TrooperzTypes {
     struct Trooperz {
         uint256 id;
         string tokenURI;
-        Trait[] traits;
+        // Trait[] traits;
         string svg; //TODO: is it necessary??
     }
 }

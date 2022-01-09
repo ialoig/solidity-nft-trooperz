@@ -48,10 +48,8 @@ async function main() {
 
   console.log("\n\n------> START: Generating Trooperz ....");
   await trooperzBase.mintTrooperz();
-  await trooperzBase.mintTrooperz();
-  await trooperzBase.mintTrooperz();
 
-  console.log("", await trooperzBase.trooperzs());
+  console.log("", await trooperzBase.trooperzs(0));
 }
 
 // We recommend this pattern to be able to use async/await everywhere

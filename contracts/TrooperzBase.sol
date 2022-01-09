@@ -131,11 +131,7 @@ contract TrooperzBase is ERC721URIStorage, Ownable, TrooperzTypes {
         return t;
     }
 
-    function generateTrooperz(uint256 trooperzId)
-        internal
-        view
-        returns (uint256)
-    {
+    function generateTrooperz(uint256 trooperzId) internal returns (uint256) {
         Trait memory headTrait = pickTraitFromCategory(
             Category.HAT,
             trooperzId
@@ -149,13 +145,15 @@ contract TrooperzBase is ERC721URIStorage, Ownable, TrooperzTypes {
         string memory trooperzSVG = TrooperzLibrary.generateSVG(traitsSVG);
 
         // creating Trooperz object
-        Trooperz memory trpz = trooperzs[trooperzId];
+        Trooperz storage trpz = trooperzs[trooperzId];
         trpz.id = trooperzId;
         trpz.tokenURI = "";
-        trpz.traits = genTraits;
+        // trpz.traits = genTraits;
         trpz.svg = trooperzSVG;
 
-        console.log("[TrooperzBase] created id: %s", trpz.id);
+        trooperzs[trooperzId] = trpz;
+
+        // console.log("[TrooperzBase] created id: %s", trooperzs[trooperzId].svg);
         return trpz.id;
     }
 
