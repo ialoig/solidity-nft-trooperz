@@ -37,5 +37,6 @@ contract TrooperzTypes {
         uint256 id;
         string tokenURI;
         Trait[] traits;
+        string svg; //TODO: is it necessary??
     }
 }

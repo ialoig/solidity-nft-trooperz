@@ -58,9 +58,7 @@ library TrooperzLibrary {
                 )
             )
         );
-        console.log("[TrooperzFactory] random before: %s", random);
         random = random % _max;
-        console.log("[TrooperzFactory] random after: %s", random);
         return random;
     }
 }

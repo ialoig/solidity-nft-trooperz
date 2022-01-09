@@ -12,22 +12,19 @@ import "./libraries/TrooperzLibrary.sol";
 contract TrooperzBase is ERC721URIStorage, Ownable, TrooperzTypes {
     using Counters for Counters.Counter;
     // define the token name
-    string public constant TOKEN_NAME = "Trooperz";
+    string constant TOKEN_NAME = "Trooperz";
     // define the token name
-    string public constant TOKEN_NAME_ABR = "TRPZ";
+    string constant TOKEN_NAME_CODE = "TRPZ";
     // define the max supply to be minted
     uint256 public constant maxSupply = 5000;
     // a tot of token reserved for team
     uint256 private _reserved = 100;
 
     // all Trooperz
-    // Trooperz[] internal trooperzs;
-    mapping(uint256 => Trooperz) trooperzs;
+    mapping(uint256 => Trooperz) public trooperzs;
 
     // mapping all traits
-    // [0] hat
-    // [1] eyes
-    mapping(uint256 => Trait[]) public traits;
+    mapping(Category => Trait[]) traits;
 
     // define id of the Trait
     Counters.Counter internal _traitIds;
@@ -43,7 +40,10 @@ contract TrooperzBase is ERC721URIStorage, Ownable, TrooperzTypes {
         string _svg
     );
 
-    constructor() ERC721("Trooperz", "TRPZ") {
+    // event is emitted when a new Trooperz is created
+    event NewTrooperz(address sender, uint256 id);
+
+    constructor() ERC721(TOKEN_NAME, TOKEN_NAME_CODE) {
         console.log("constructor: Trooperz Token");
     }
 
@@ -56,25 +56,29 @@ contract TrooperzBase is ERC721URIStorage, Ownable, TrooperzTypes {
         Season _season,
         string memory _svg
     ) public onlyOwner returns (uint256) {
-        // require(_category.length > 0);
+        // require(uint8(_category) > 0);
         require(bytes(_name).length > 0);
-        // require(_season.length > 0);
+        // require(uint8(_season) > 0);
         require(bytes(_svg).length > 0);
 
         // get the current trait ID by incrementing ids variable
         uint256 newTraitId = _traitIds.current();
 
         // creating new Trait
-        Trait memory t = Trait(newTraitId, _category, _name, _season, _svg);
-        console.log("[TrooperzTraitFactory] created trait id: %s", t.id);
+        Trait memory t = Trait({
+            id: newTraitId,
+            category: _category,
+            name: _name,
+            season: _season,
+            svg: _svg
+        });
+
+        console.log("[TrooperzBase] created trait id: %s", t.id);
 
         // insert new trait into array of traits
         // index value is based on trait's category
-        traits[uint8(_category)].push(t);
-        console.log(
-            "[TrooperzTraitFactory] traits size:",
-            traits[uint8(_category)].length
-        );
+        traits[_category].push(t);
+        console.log("[TrooperzBase] traits size:", traits[_category].length);
 
         // send the new Trait event
         emit NewTrait(newTraitId, _category, _name, _season, _svg);
@@ -88,23 +92,23 @@ contract TrooperzBase is ERC721URIStorage, Ownable, TrooperzTypes {
     /**
      *  @notice Return a Trait from a given Trait ID
      */
-    function getTraitById(uint8 _category, uint256 _traitId)
-        internal
+    function getTraitNameByCategoryAndId(Category _category, uint256 _traitId)
+        public
         view
-        returns (Trait memory)
+        returns (string memory)
     {
         require(_traitId >= 0);
-        require(_category >= 0);
+        require(uint8(_category) >= 0);
 
         Trait memory trait = traits[_category][_traitId];
-        return trait;
+        return trait.name;
     }
 
     /**
      *   @notice Clear the traits
      */
-    function clearTraits(uint8 _category) public onlyOwner {
-        require(_category >= 0);
+    function clearTraits(Category _category) public onlyOwner {
+        require(uint8(_category) >= 0);
         delete traits[_category];
     }
 
@@ -113,32 +117,18 @@ contract TrooperzBase is ERC721URIStorage, Ownable, TrooperzTypes {
         view
         returns (Trait memory)
     {
-        console.log("[TrooperzBase] _category: %s", uint8(_category));
-
         //getting a random trait for the category passed as a param
-        uint256 size = traits[uint8(_category)].length;
-        console.log("[TrooperzBase] traits size: %s", size);
+        uint256 size = traits[_category].length;
+        console.log(
+            "[TrooperzBase] n.%s traits from category %s",
+            size,
+            uint8(_category)
+        );
         uint256 random = TrooperzLibrary.generateRandom(trooperzId, size);
 
-        Trait memory t = traits[uint8(_category)][random];
-        console.log("[TrooperzBase] picked trait: %s", t.id);
+        Trait memory t = traits[_category][random];
+        console.log("[TrooperzBase] picked trait id: %s", t.id);
         return t;
-    }
-
-    function getTrooperz(uint256 trooperzId)
-        internal
-        view
-        returns (string memory)
-    {
-        string memory traitsSVG = string(
-            abi.encodePacked(
-                pickTraitFromCategory(Category.HAT, trooperzId).svg
-            )
-        );
-
-        string memory svg = TrooperzLibrary.generateSVG(traitsSVG);
-        console.log("[TrooperzBase] svg: %s", svg);
-        return svg;
     }
 
     function generateTrooperz(uint256 trooperzId)
@@ -152,11 +142,20 @@ contract TrooperzBase is ERC721URIStorage, Ownable, TrooperzTypes {
         );
         Trait[] memory genTraits = new Trait[](1);
         genTraits[uint8(Category.HAT)] = headTrait;
-        console.log("[TrooperzBase] genTraits size: %s", genTraits.length);
 
-        Trooperz memory trpz = Trooperz(trooperzId, "", genTraits);
-        // string memory svg = TrooperzLibrary.generateSVG(traitsSVG);
-        console.log("[TrooperzBase] id: %s", trpz.id);
+        string memory traitsSVG = string(abi.encodePacked(headTrait.svg));
+
+        // creating Trooperz svg string
+        string memory trooperzSVG = TrooperzLibrary.generateSVG(traitsSVG);
+
+        // creating Trooperz object
+        Trooperz memory trpz = trooperzs[trooperzId];
+        trpz.id = trooperzId;
+        trpz.tokenURI = "";
+        trpz.traits = genTraits;
+        trpz.svg = trooperzSVG;
+
+        console.log("[TrooperzBase] created id: %s", trpz.id);
         return trpz.id;
     }
 
@@ -165,11 +164,14 @@ contract TrooperzBase is ERC721URIStorage, Ownable, TrooperzTypes {
         uint256 newTrooperzId = _trooperzIds.current();
         require(newTrooperzId < maxSupply);
 
-        // string memory svg = getTrooperz(newTrooperzId);
-        uint256 svg = generateTrooperz(newTrooperzId);
+        generateTrooperz(newTrooperzId);
+
+        // send the new Trait event
+        emit NewTrooperz(msg.sender, newTrooperzId);
 
         //incrementing trooperz ids
         _trooperzIds.increment();
-        return svg;
+        console.log("[TrooperzBase] ---> Trooperz minted #%s", newTrooperzId);
+        return newTrooperzId;
     }
 }
