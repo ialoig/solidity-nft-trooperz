@@ -11,36 +11,36 @@
 
 1.  **Setup local tooling**
     ```shell
-    $ mkdir project-name
-    $ cd project-name
-    $ npm init -y
-    $ npm install --save-dev hardhat
+    mkdir project-name
+    cd project-name
+    npm init -y
+    npm install --save-dev hardhat
     ```
 
 Now you can install a sample project, running:
 
 ```shell
-    $ npx harhat
+    npx harhat
 ```
 
 Go ahead and install these other dependencies just in case it didn't do it automatically.
 
 ```shell
-    $ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers
-    $ npm install @openzeppelin/contracts
+    npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers
+    npm install @openzeppelin/contracts
 ```
 
 2.  **To run the contract locally**
 
     ```shell
-    $ npx hardhat run scripts/run.js
+    npx hardhat run scripts/run.js
     ```
 
 3.  **To deploy the contract on Ethereum [Rinkeby network](https://hardhat.org/tutorial/deploying-to-a-live-network.html#_7-deploying-to-a-live-network)**
 
 
     ```shell
-    $ npx hardhat run scripts/deploy.js --network rinkeby
+    npx hardhat run scripts/deploy.js --network rinkeby
     ```
 
 # 📚 Advanced Sample Hardhat Project 👷‍
